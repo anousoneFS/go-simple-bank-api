@@ -41,6 +41,11 @@ func RandomMoney() int64 {
 	return RandomInt(0, 1000)
 }
 
+// Random id
+func RandomID() int64 {
+	return RandomInt(1, 100)
+}
+
 // RandomCurrency generates a random currency code
 func RandomCurrency() string {
 	currencies := []string{"USD", "EUR", "CAD"}
