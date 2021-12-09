@@ -11,7 +11,7 @@ const createEntry = `-- name: CreateEntry :one
 INSERT INTO entries( 
     account_id,
     amount
- ) VALUES ($1, $2) RETURNING id, account_id, amount, "create"
+ ) VALUES ($1, $2) RETURNING id, account_id, amount, create_at
 `
 
 type CreateEntryParams struct {
@@ -26,13 +26,13 @@ func (q *Queries) CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry
 		&i.ID,
 		&i.AccountID,
 		&i.Amount,
-		&i.Create,
+		&i.CreateAt,
 	)
 	return i, err
 }
 
 const getEntry = `-- name: GetEntry :one
-SELECT id, account_id, amount, "create" FROM entries WHERE id = $1 LIMIT 1
+SELECT id, account_id, amount, create_at FROM entries WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetEntry(ctx context.Context, id int64) (Entry, error) {
@@ -42,13 +42,13 @@ func (q *Queries) GetEntry(ctx context.Context, id int64) (Entry, error) {
 		&i.ID,
 		&i.AccountID,
 		&i.Amount,
-		&i.Create,
+		&i.CreateAt,
 	)
 	return i, err
 }
 
 const listEntries = `-- name: ListEntries :many
-SELECT id, account_id, amount, "create" FROM entries
+SELECT id, account_id, amount, create_at FROM entries
 WHERE account_id = $1
 ORDER BY id
 LIMIT $2
@@ -74,7 +74,7 @@ func (q *Queries) ListEntries(ctx context.Context, arg ListEntriesParams) ([]Ent
 			&i.ID,
 			&i.AccountID,
 			&i.Amount,
-			&i.Create,
+			&i.CreateAt,
 		); err != nil {
 			return nil, err
 		}
